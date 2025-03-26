@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enced - Encrypt & Decrypt</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://unpkg.com/finisher-header"></script>
+</head>
+<body>
+
+<div id="particles-js"></div>
+
+
+    <div id="logo">ENCED</div>
+
+    <div class="header">
+        <button class="tab encrypt-tab">EncrypTer</button>
+        <button class="tab decrypt-tab">DecrypTer</button>
+    </div>
+
+    <div class="container">
+        <!-- Encryption Section -->
+        <div class="card">
+            <h2 class="headerName">Encryption</h2>
+            <label>Enter Key:</label>
+            <input type="text" id="textInput" placeholder="Enter text to encrypt...">
+            <div class="icons">
+                <img src="image.png" alt="key">
+                <img src="image.png" alt="key">
+                <img src="image.png" alt="key">
+            </div>
+            <label>Encrypted Key:</label>
+            <input type="text" id="encryptedOutput" readonly>
+            <button onclick="encryptText()">Encrypt</button>
+        </div>
+
+        <!-- Decryption Section -->
+        <div class="card">
+            <h2 class="headerName">Decryption</h2>
+            <label>Enter Key:</label>
+            <input type="text" id="decryptInput" placeholder="Enter encrypted text...">
+            <div class="icons">
+                <img src="shield.png" alt="lock">
+                <img src="shield.png" alt="lock">
+                <img src="shield.png" alt="lock">
+            </div>
+            <label>Decrypted Key:</label>
+            <input type="text" id="decryptedOutput" readonly>
+            <button onclick="decryptText()">Decrypt</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
