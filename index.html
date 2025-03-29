@@ -7,20 +7,28 @@
     <link rel="stylesheet" href="styles.css" />
     <!-- CryptoJS Library -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <!-- QR Code Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
   </head>
   <body>
     <div id="particles-js"></div>
 
     <div class="topbar">
       <div id="logo">ENCED</div>
-      <button id="darkModeToggle" onclick="toggleDarkMode()">
-        🌙 Dark Mode
-      </button>
+      <div class="topbar-buttons">
+        <button id="passwordGeneratorBtn" onclick="togglePasswordGenerator()">
+          🔑 Password Generator
+        </button>
+        <button id="darkModeToggle" onclick="toggleDarkMode()">
+          🌙 Dark Mode
+        </button>
+      </div>
     </div>
 
     <div class="header">
       <button class="tab encrypt-tab">EncrypTer</button>
       <button class="tab decrypt-tab">DecrypTer</button>
+      <button class="tab qrcode-tab">QR Code</button>
     </div>
 
     <div id="errorBox"></div>
@@ -50,12 +58,17 @@
 
         <div class="input-group">
           <label>Encryption Key:</label>
-          <input
-            type="password"
-            id="encryptKey"
-            placeholder="Enter your secret key"
-            oninput="checkPasswordStrength(this.value)"
-          />
+          <div class="key-input-container">
+            <input
+              type="password"
+              id="encryptKey"
+              placeholder="Enter your secret key"
+              oninput="checkPasswordStrength(this.value)"
+            />
+            <button class="generate-btn" onclick="fillEncryptKey()">
+              Generate
+            </button>
+          </div>
           <div class="strength-meter-container">
             <progress id="strengthMeter" value="0" max="5"></progress>
             <span id="strengthText">No password</span>
@@ -63,9 +76,9 @@
         </div>
 
         <div class="icons">
-          <img src="key-icon.png" alt="key" />
-          <img src="key-icon.png" alt="key" />
-          <img src="key-icon.png" alt="key" />
+          <img src="image.png" alt="key" />
+          <img src="image.png" alt="key" />
+          <img src="image.png" alt="key" />
         </div>
 
         <div class="input-group">
@@ -74,6 +87,7 @@
           <div class="button-group">
             <button onclick="copyToClipboard('encryptedOutput')">Copy</button>
             <button onclick="downloadResult(true)">Download</button>
+            <button onclick="generateQRFromEncrypted()">Generate QR</button>
           </div>
         </div>
 
@@ -111,9 +125,9 @@
         </div>
 
         <div class="icons">
-          <img src="lock-icon.png" alt="lock" />
-          <img src="lock-icon.png" alt="lock" />
-          <img src="lock-icon.png" alt="lock" />
+          <img src="shield.png" alt="lock" />
+          <img src="shield.png" alt="lock" />
+          <img src="shield.png" alt="lock" />
         </div>
 
         <div class="input-group">
@@ -126,6 +140,102 @@
         </div>
 
         <button class="primary-btn" onclick="decryptText()">Decrypt</button>
+      </div>
+
+      <!-- QR Code Section -->
+      <div class="card">
+        <h2 class="headerName">QR Code Generator</h2>
+
+        <div class="input-group">
+          <label>Text for QR Code:</label>
+          <textarea
+            id="qrInput"
+            placeholder="Enter text or paste encrypted content for QR code..."
+          ></textarea>
+        </div>
+
+        <div class="input-group">
+          <label>QR Code Size:</label>
+          <div class="range-container">
+            <input
+              type="range"
+              id="qrSizeSlider"
+              min="100"
+              max="300"
+              value="200"
+              oninput="updateQRSize(this.value)"
+            />
+            <span id="qrSizeValue">200 x 200</span>
+          </div>
+        </div>
+
+        <div class="qrcode-container">
+          <div id="qrcode"></div>
+        </div>
+
+        <div class="button-group">
+          <button onclick="generateQRCode()">Generate QR Code</button>
+          <button onclick="downloadQRCode()">Download QR Code</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Password Generator Modal -->
+    <div id="passwordGeneratorModal" class="modal">
+      <div class="modal-content">
+        <span class="close-btn" onclick="togglePasswordGenerator()"
+          >&times;</span
+        >
+        <h2>Password Generator</h2>
+
+        <div class="password-result">
+          <input type="text" id="generatedPassword" readonly />
+          <button onclick="copyToClipboard('generatedPassword')">Copy</button>
+        </div>
+
+        <div class="password-options">
+          <div class="option">
+            <label>Password Length:</label>
+            <div class="range-container">
+              <input
+                type="range"
+                id="passwordLength"
+                min="8"
+                max="32"
+                value="16"
+                oninput="updatePasswordLength(this.value)"
+              />
+              <span id="passwordLengthValue">16</span>
+            </div>
+          </div>
+
+          <div class="option">
+            <input type="checkbox" id="includeUppercase" checked />
+            <label for="includeUppercase">Include Uppercase (A-Z)</label>
+          </div>
+
+          <div class="option">
+            <input type="checkbox" id="includeLowercase" checked />
+            <label for="includeLowercase">Include Lowercase (a-z)</label>
+          </div>
+
+          <div class="option">
+            <input type="checkbox" id="includeNumbers" checked />
+            <label for="includeNumbers">Include Numbers (0-9)</label>
+          </div>
+
+          <div class="option">
+            <input type="checkbox" id="includeSymbols" checked />
+            <label for="includeSymbols">Include Symbols (!@#$%^&*)</label>
+          </div>
+        </div>
+
+        <button class="primary-btn" onclick="generatePassword()">
+          Generate Password
+        </button>
+        <button class="secondary-btn" onclick="useGeneratedPassword()">
+          Use This Password
+        </button>
       </div>
     </div>
 

@@ -1,29 +1,56 @@
 // Import CryptoJS library in the HTML file with:
 // <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+// <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 // Tab Switching Functionality
 document.addEventListener("DOMContentLoaded", function () {
   const encryptTab = document.querySelector(".encrypt-tab");
   const decryptTab = document.querySelector(".decrypt-tab");
+  const qrcodeTab = document.querySelector(".qrcode-tab");
   const encryptCard = document.querySelector(".card:nth-child(1)");
   const decryptCard = document.querySelector(".card:nth-child(2)");
+  const qrcodeCard = document.querySelector(".card:nth-child(3)");
 
-  // Initially hide decrypt card
+  // Initially hide decrypt and qrcode cards
   decryptCard.style.display = "none";
+  qrcodeCard.style.display = "none";
   encryptTab.classList.add("active");
 
   encryptTab.addEventListener("click", function () {
     encryptCard.style.display = "block";
     decryptCard.style.display = "none";
+    qrcodeCard.style.display = "none";
     encryptTab.classList.add("active");
     decryptTab.classList.remove("active");
+    qrcodeTab.classList.remove("active");
   });
 
   decryptTab.addEventListener("click", function () {
     encryptCard.style.display = "none";
     decryptCard.style.display = "block";
+    qrcodeCard.style.display = "none";
     decryptTab.classList.add("active");
     encryptTab.classList.remove("active");
+    qrcodeTab.classList.remove("active");
+  });
+
+  qrcodeTab.addEventListener("click", function () {
+    encryptCard.style.display = "none";
+    decryptCard.style.display = "none";
+    qrcodeCard.style.display = "block";
+    qrcodeTab.classList.add("active");
+    encryptTab.classList.remove("active");
+    decryptTab.classList.remove("active");
+  });
+
+  // Initialize QR code container
+  new QRCode(document.getElementById("qrcode"), {
+    text: "https://enced.example.com",
+    width: 200,
+    height: 200,
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H,
   });
 });
 
@@ -305,3 +332,152 @@ particlesJS("particles-js", {
     },
   },
 });
+
+// QR Code Generator
+function generateQRCode() {
+  const qrInput = document.getElementById("qrInput").value;
+
+  if (!qrInput) {
+    showError("Please enter text for the QR code");
+    return;
+  }
+
+  // Clear previous QR code
+  document.getElementById("qrcode").innerHTML = "";
+
+  // Generate new QR code
+  const size = document.getElementById("qrSizeSlider").value;
+
+  new QRCode(document.getElementById("qrcode"), {
+    text: qrInput,
+    width: parseInt(size),
+    height: parseInt(size),
+    colorDark: "#000000",
+    colorLight: "#ffffff",
+    correctLevel: QRCode.CorrectLevel.H,
+  });
+
+  // Add to history
+  addToHistory("qrcode", qrInput, "QR Code Generated");
+}
+
+// Update QR Size
+function updateQRSize(size) {
+  document.getElementById("qrSizeValue").textContent = `${size} x ${size}`;
+}
+
+// Download QR Code
+function downloadQRCode() {
+  const qrCanvas = document.querySelector("#qrcode canvas");
+
+  if (!qrCanvas) {
+    showError("No QR code to download");
+    return;
+  }
+
+  const a = document.createElement("a");
+  a.href = qrCanvas.toDataURL("image/png");
+  a.download = "qrcode.png";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+// Generate QR from encrypted output
+function generateQRFromEncrypted() {
+  const encryptedText = document.getElementById("encryptedOutput").value;
+
+  if (!encryptedText) {
+    showError("No encrypted text to generate QR code");
+    return;
+  }
+
+  // Switch to QR code tab
+  document.querySelector(".qrcode-tab").click();
+
+  // Fill input and generate QR
+  document.getElementById("qrInput").value = encryptedText;
+  generateQRCode();
+}
+
+// Password Generator Modal
+function togglePasswordGenerator() {
+  const modal = document.getElementById("passwordGeneratorModal");
+  modal.style.display = modal.style.display === "block" ? "none" : "block";
+
+  // Generate a new password when opening
+  if (modal.style.display === "block") {
+    generatePassword();
+  }
+}
+
+// Close modal when clicking outside
+window.onclick = function (event) {
+  const modal = document.getElementById("passwordGeneratorModal");
+  if (event.target === modal) {
+    modal.style.display = "none";
+  }
+};
+
+// Update password length display
+function updatePasswordLength(length) {
+  document.getElementById("passwordLengthValue").textContent = length;
+}
+
+// Generate random password
+function generatePassword() {
+  const length = parseInt(document.getElementById("passwordLength").value);
+  const includeUppercase = document.getElementById("includeUppercase").checked;
+  const includeLowercase = document.getElementById("includeLowercase").checked;
+  const includeNumbers = document.getElementById("includeNumbers").checked;
+  const includeSymbols = document.getElementById("includeSymbols").checked;
+
+  if (
+    !includeUppercase &&
+    !includeLowercase &&
+    !includeNumbers &&
+    !includeSymbols
+  ) {
+    showError("Please select at least one character type");
+    return;
+  }
+
+  let charset = "";
+  if (includeUppercase) charset += "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  if (includeLowercase) charset += "abcdefghijklmnopqrstuvwxyz";
+  if (includeNumbers) charset += "0123456789";
+  if (includeSymbols) charset += "!@#$%^&*()_+-=[]{}|;:,.<>?";
+
+  let password = "";
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    password += charset[randomIndex];
+  }
+
+  document.getElementById("generatedPassword").value = password;
+
+  // Check password strength
+  checkPasswordStrength(password);
+}
+
+// Use generated password for encryption
+function useGeneratedPassword() {
+  const password = document.getElementById("generatedPassword").value;
+
+  if (!password) {
+    showError("No password generated");
+    return;
+  }
+
+  document.getElementById("encryptKey").value = password;
+  checkPasswordStrength(password);
+  togglePasswordGenerator();
+
+  // Switch to encrypt tab if not active
+  document.querySelector(".encrypt-tab").click();
+}
+
+// Fill encryption key with generated password
+function fillEncryptKey() {
+  togglePasswordGenerator();
+}
