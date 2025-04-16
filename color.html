@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Color Steganography 🔐</title>
+  <link rel="stylesheet" href="color.css">
+</head>
+<body>
+  <div class="container">
+    <h1>🎨 Color Steganography Encryptor</h1>
+    
+    <textarea id="textInput" placeholder="Enter your secret message..."></textarea>
+    
+    <div class="buttons">
+      <button onclick="encrypt()">Encrypt</button>
+      <button onclick="decrypt()">Decrypt</button>
+      <button onclick="downloadImage()">Download</button>
+    </div>
+
+    <canvas id="colorCanvas"></canvas>
+
+    <label for="uploadInput" class="upload-label">🔍 Upload Encrypted Image:</label>
+    <input type="file" id="uploadInput" accept="image/*" onchange="loadEncryptedImage(event)">
+    
+    <p id="decryptedText"></p>
+  </div>
+  <script src="color.js"></script>
+</body>
+</html>

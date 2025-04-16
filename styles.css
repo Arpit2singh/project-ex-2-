@@ -13,6 +13,25 @@
   --modal-bg: rgba(0, 0, 0, 0.7);
 }
 
+.colorEnc{
+  height: 50px;
+  width: 150px;
+  background-color: #3ed77e;
+  text-decoration: none;
+  text-align: center;
+  font-weight: 700;
+  font-size: large;
+  display: flex;
+  justify-content: center;
+  align-items: center; 
+  border-radius: 40px;
+  padding: 10px;
+  
+}
+.colorEnc:hover{
+  background: #8affbb;
+}
+
 /* Dark Mode Variables */
 .dark-mode {
   --card-color: #2d2d2d;
