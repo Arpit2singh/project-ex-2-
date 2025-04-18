@@ -13,9 +13,9 @@
   --modal-bg: rgba(0, 0, 0, 0.7);
 }
 
-.colorEnc{
+.colorEnc {
   height: 50px;
-  width: 150px;
+  width: 175px;
   background-color: #3ed77e;
   text-decoration: none;
   text-align: center;
@@ -23,12 +23,11 @@
   font-size: large;
   display: flex;
   justify-content: center;
-  align-items: center; 
+  align-items: center;
   border-radius: 40px;
   padding: 10px;
-  
 }
-.colorEnc:hover{
+.colorEnc:hover {
   background: #8affbb;
 }
 
